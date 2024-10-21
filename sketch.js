@@ -1,15 +1,54 @@
 let dice = [];
-let numberOfDice = 5;
+let numberOfDice = 2;
+let lock;
+let Money;
+let lights;
+let lose;
+let timer = 15;
+
+
+
+
+function preload() {
+
+lock = loadImage("assets/lock.png");
+Money = loadImage("assets/Money.png");
+lights = loadImage("assets/lights.png");
+lose = loadImage("assets/lose.png");
+
+}
+
+
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   for (let i = 0; i < numberOfDice; i++) {
-    dice[i] = new Die(50); // argument is the size of the die
+    dice[i] = new Die(100); // argument is the size of the die
   }
+
 }
 
 function draw() {
-  background("darkolivegreen");
+
+  let allSixes = true;
+  for (let i = 0; i < dice.length; i++) {
+    if (dice[i].value !== 6) {
+      allSixes = false;
+      break;
+    }
+
+  }
+
+    // Change background color based on whether all dice rolled a 6
+    if (allSixes) {
+      background("green");text("Unlock", 150,80); image(Money,900, 200);
+      isFrozen = true
+    } else {
+      background("black");text("Locked", 150,80);image(lock,100, 50)
+    }
+
+ 
   
   // loop over the array and place+display each die
   for (let i = 0; i < dice.length; i++) {
@@ -18,16 +57,26 @@ function draw() {
     die.display(); // actually draw it on screen
   }
 
-}
+    // Timer countdown
+    if (frameCount % 60 === 0 && timer > 0) {
+      timer--;
+    }
+    if (timer === 0) {
+      background("black");image(lights,500, 100);image(lose,500, -200)
+      
+    }
+
+
+  }
+  
 
 function mouseClicked() {
   // loop over the array of dice...
   for (let i = 0; i < dice.length; i++) {
     const die = dice[i];
     // if the cursor is over the current die, freeze/unfreeze that die
-    if (die.isTouched(mouseX,mouseY)) {
-      die.toggleFreeze();
-    }
+
+    
   }
 }
 
